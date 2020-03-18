@@ -161,7 +161,11 @@ class Stats {
 			$indexable_sites = Utils\get_sites();
 			foreach ( $indexable_sites as $site ) {
 
+				switch_to_blog( $site['blog_id'] );
+
 				$site_indexables = Indexables::factory()->get_all( null, true );
+
+				restore_current_blog();
 
 				if ( empty( $site_indexables ) ) {
 					continue;
