@@ -169,7 +169,7 @@ class Stats {
 
 				foreach( $site_indexables as $indexable_slug ) {
 
-					$index_name = Indexables::factory()->get( $indexable_slug )->get_index_name( get_current_blog_id() );
+					$index_name = Indexables::factory()->get( $indexable_slug )->get_index_name( $site['blog_id'] );
 
 					if ( ! in_array( $index_name, $sites, true ) ) {
 						$sites[] = $index_name;
