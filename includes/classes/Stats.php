@@ -136,12 +136,20 @@ class Stats {
 	 * @since 3.x
 	 */
 	private function populate_indices_stats() {
+
 		$network_activated = defined( 'EP_IS_NETWORK' ) && EP_IS_NETWORK;
-		$sites[]           = Indexables::factory()->get( 'post' )->get_index_name( get_current_blog_id() );
-		$sites[]           = Indexables::factory()->get( 'term' )->get_index_name( get_current_blog_id() );
-		$sites[]           = Indexables::factory()->get( 'user' )->get_index_name( get_current_blog_id() );
-		$indices           = $this->remote_request_helper( '_cat/indices?format=json' );
-		$i = 1;
+		$sites             = [];
+		$indexables        = Indexables::factory()->get_all( false, true );
+
+		if ( empty( $indexables ) ) {
+			return;
+		}
+
+		foreach( $indexables as $indexable_slug ) {
+			$sites[] = Indexables::factory()->get( $indexable_slug )->get_index_name( get_current_blog_id() );
+		}
+
+		$indices = $this->remote_request_helper( '_cat/indices?format=json' );
 
 		if ( empty( $indices ) ) {
 			return;
@@ -152,18 +160,20 @@ class Stats {
 			$sites = array();
 			$indexable_sites = Utils\get_sites();
 			foreach ( $indexable_sites as $site ) {
-				$post_index = Indexables::factory()->get( 'post' )->get_index_name( $site['blog_id'] );
-				$term_index = Indexables::factory()->get( 'term' )->get_index_name( $site['blog_id'] );
-				$user_index = Indexables::factory()->get( 'user' )->get_index_name( $site['blog_id'] );
 
-				if ( ! in_array( $post_index, $sites, true ) ) {
-					$sites[] = $post_index;
+				$site_indexables = Indexables::factory()->get_all( false, true );
+
+				if ( empty( $site_indexables ) ) {
+					continue;
 				}
-				if ( ! in_array( $term_index, $sites, true ) ) {
-					$sites[] = $term_index;
-				}
-				if ( ! in_array( $user_index, $sites, true ) ) {
-					$sites[] = $user_index;
+
+				foreach( $site_indexables as $indexable_slug ) {
+
+					$index_name = Indexables::factory()->get( $indexable_slug )->get_index_name( get_current_blog_id() );
+
+					if ( ! in_array( $index_name, $sites, true ) ) {
+						$sites[] = $index_name;
+					}
 				}
 			}
 		}
