@@ -139,7 +139,7 @@ class Stats {
 
 		$network_activated = defined( 'EP_IS_NETWORK' ) && EP_IS_NETWORK;
 		$sites             = [];
-		$indexables        = Indexables::factory()->get_all( false, true );
+		$indexables        = Indexables::factory()->get_all( null, true );
 
 		if ( empty( $indexables ) ) {
 			return;
@@ -161,7 +161,7 @@ class Stats {
 			$indexable_sites = Utils\get_sites();
 			foreach ( $indexable_sites as $site ) {
 
-				$site_indexables = Indexables::factory()->get_all( false, true );
+				$site_indexables = Indexables::factory()->get_all( null, true );
 
 				if ( empty( $site_indexables ) ) {
 					continue;
