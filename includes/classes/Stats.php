@@ -196,6 +196,8 @@ class Stats {
 		 */
 		$filtered_indices = apply_filters( 'ep_index_health_stats_indices', $filtered_indices, $indices );
 
+		$i = 1;
+
 		foreach ( $filtered_indices as $index ) {
 			$this->populate_index_stats( $index['index'], $index['health'], $i++ );
 		}
